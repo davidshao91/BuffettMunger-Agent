@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuffettMunger-Agent - 数字化价值投资智能体</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- 引入Chart.js库 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- 引入导出功能所需的库 -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>BuffettMunger-Agent</h1>
+      <p class="sub">价值投资分析智能体 · 安全边际 · 护城河 · 风险筛查 · 透明可验证</p>
+      <a href="https://github.com/davidshao91/BuffettMunger-Agent" target="_blank" class="star-btn">⭐ Star 项目</a>
+    </header>
+
+    <div class="demo-box">
+      <h2>🧪 在线体验（沙盒演示）</h2>
+      <p>选择一家公司，运行完整价值投资分析体系</p>
+
+      <div class="form-group">
+        <label for="stockSelector">选择股票：</label>
+        <select id="stockSelector" multiple size="5" style="width: 300px;">
+          <option value="">-- 选择公司 --</option>
+        </select>
+        <p style="font-size: 0.9rem; color: #666;">按住Ctrl键可多选</p>
+      </div>
+      <div class="form-group">
+        <button id="runBtn">运行 BuffettMunger-Agent</button>
+        <button id="runPortfolioBtn">运行投资组合分析</button>
+      </div>
+
+      <div id="result" class="result hidden">
+        <div class="loading">正在运行智能体分析中...</div>
+        <div class="report-container">
+          <div class="report"></div>
+          <div class="charts">
+            <div class="chart-container">
+              <canvas id="scoreChart"></canvas>
+            </div>
+            <div class="chart-container">
+              <canvas id="metricsChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="export-buttons" style="margin-top: 1rem; text-align: center;">
+          <button id="exportPDFBtn">导出 PDF</button>
+          <button id="exportExcelBtn">导出 Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="info">
+      <p>这是开源项目的体验沙盒，使用离线数据演示价值投资分析框架。</p>
+      <p>不构成投资建议，不提供实时数据，不荐股。</p>
+      <p><a href="VISION.md" target="_blank">项目愿景</a> · <a href="https://github.com/davidshao91/BuffettMunger-Agent" target="_blank">GitHub</a></p>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="agent.js"></script>
+</body>
+</html>
