@@ -1,0 +1,53 @@
+# ==================== Python 基础忽略 ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-wheel-metadata/
+*.whl
+
+# ==================== 本地环境/配置 ====================
+# 虚拟环境
+venv/
+env/
+.env
+.venv/
+# IDE 配置（VSCode/PyCharm）
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store  # Mac 系统文件
+
+# ==================== 项目专属忽略 ====================
+# 本地缓存数据
+cache/
+data/cache.sqlite
+# 日志文件
+*.log
+# 离线数据（可选，若不想提交测试数据可保留）
+# data/local_stock_data.json
+# 生成的报告/可视化文件
+reports/
+*.pdf
+*.png
+*.html
+# 敏感配置（含 Token/密钥）
+config/local_config.yaml
+secrets.json
