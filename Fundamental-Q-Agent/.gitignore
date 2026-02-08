@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Streamlit
+.streamlit/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Data
+*.json
+!observation_pool.json.example
+!factor_cache.json.example
+
+# Logs
+logs
+*.log
+
+# Dependencies
+Pipfile
+Pipfile.lock
+poetry.lock
+
+# Build
+build/
+dist/
+*.egg-info/

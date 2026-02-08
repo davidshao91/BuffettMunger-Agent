@@ -1,17 +1,90 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BuffettMunger-Agent - 数字化价值投资智能体</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- 引入Chart.js库 -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- 引入导出功能所需的库 -->
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuffettMunger-Agent - 数字化价值投资智能体</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入Chart.js库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <!-- 引入导出功能所需的库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- 引入Markdown解析库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.0.1/marked.min.js"></script>
+    <!-- 引入Markdown样式 -->
+    <style>
+      #markdownContent h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        color: #111827;
+      }
+      #markdownContent h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: #111827;
+      }
+      #markdownContent h3 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: #111827;
+      }
+      #markdownContent p {
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
+      #markdownContent ul, #markdownContent ol {
+        margin-bottom: 1rem;
+        margin-left: 2rem;
+      }
+      #markdownContent li {
+        margin-bottom: 0.5rem;
+      }
+      #markdownContent table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+      }
+      #markdownContent th, #markdownContent td {
+        padding: 0.75rem;
+        text-align: left;
+        border: 1px solid #e5e7eb;
+      }
+      #markdownContent th {
+        background-color: #f3f4f6;
+        font-weight: bold;
+      }
+      #markdownContent code {
+        background-color: #f3f4f6;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+        font-family: monospace;
+      }
+      #markdownContent pre {
+        background-color: #f3f4f6;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin-bottom: 1rem;
+      }
+      #markdownContent pre code {
+        background-color: transparent;
+        padding: 0;
+      }
+      #markdownContent blockquote {
+        border-left: 4px solid #e5e7eb;
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+        color: #6b7280;
+      }
+    </style>
+  </head>
 <body>
 
   <div class="container">
@@ -21,38 +94,265 @@
       <a href="https://github.com/davidshao91/BuffettMunger-Agent" target="_blank" class="star-btn">⭐ Star 项目</a>
     </header>
 
-    <div class="demo-box">
-      <h2>🧪 在线体验（沙盒演示）</h2>
-      <p>选择一家公司，运行完整价值投资分析体系</p>
+    <!-- 标签页导航 -->
+    <div class="tab-navigation" style="margin: 2rem 0;">
+      <button class="tab-btn" data-tab="fire">🔥 FIRE计算器</button>
+      <button class="tab-btn active" data-tab="holdings">📋 我的持仓</button>
+      <button class="tab-btn" data-tab="analysis">🧪 股票分析</button>
+      <button class="tab-btn" data-tab="recommendations">💎 好公司推荐</button>
+      <button class="tab-btn" data-tab="ai-agent">🤖 AI智能体对话</button>
+    </div>
 
-      <div class="form-group">
-        <label for="stockSelector">选择股票：</label>
-        <select id="stockSelector" multiple size="5" style="width: 300px;">
-          <option value="">-- 选择公司 --</option>
-        </select>
-        <p style="font-size: 0.9rem; color: #666;">按住Ctrl键可多选</p>
-      </div>
-      <div class="form-group">
-        <button id="runBtn">运行 BuffettMunger-Agent</button>
-        <button id="runPortfolioBtn">运行投资组合分析</button>
-      </div>
-
-      <div id="result" class="result hidden">
-        <div class="loading">正在运行智能体分析中...</div>
-        <div class="report-container">
-          <div class="report"></div>
-          <div class="charts">
-            <div class="chart-container">
-              <canvas id="scoreChart"></canvas>
-            </div>
-            <div class="chart-container">
-              <canvas id="metricsChart"></canvas>
+    <!-- 持仓管理模块 -->
+    <div class="tab-content active" id="holdings-tab">
+      <div class="demo-box">
+        <h2>📋 我的持仓</h2>
+        <p>管理您的持仓股票，查看安全边际分析</p>
+        
+        <div class="form-group">
+          <button id="addHoldingBtn">添加持仓</button>
+          <button id="analyzeHoldingsBtn">分析持仓</button>
+        </div>
+        
+        <div id="holdingsList" style="margin-top: 1rem;">
+          <table id="holdingsTable" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #f3f4f6;">
+                <th style="padding: 0.5rem; text-align: left; border: 1px solid #ddd;">股票名称</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">股票代码</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">持仓成本</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">持仓数量</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="holdingsTableBody">
+              <!-- 持仓数据将通过JavaScript动态添加 -->
+            </tbody>
+          </table>
+          <p id="noHoldingsMsg" style="text-align: center; color: #666; margin-top: 1rem;">暂无持仓数据，请添加持仓</p>
+        </div>
+        
+        <div id="holdingsAnalysis" class="result hidden" style="margin-top: 1.5rem;">
+          <h3>持仓分析结果</h3>
+          <div class="loading">正在分析持仓...</div>
+          <div class="report-container">
+            <div class="report"></div>
+            <div class="charts">
+              <div class="chart-container">
+                <canvas id="holdingsChart"></canvas>
+              </div>
             </div>
           </div>
         </div>
-        <div class="export-buttons" style="margin-top: 1rem; text-align: center;">
-          <button id="exportPDFBtn">导出 PDF</button>
-          <button id="exportExcelBtn">导出 Excel</button>
+      </div>
+    </div>
+
+    <!-- 股票分析模块 -->
+    <div class="tab-content" id="analysis-tab">
+      <div class="demo-box">
+        <h2>🧪 股票分析</h2>
+        <p>选择一家公司，运行完整价值投资分析体系</p>
+
+        <div class="form-group">
+          <label for="stockSelector">选择股票：</label>
+          <select id="stockSelector" multiple size="5" style="width: 300px;">
+            <option value="">-- 选择公司 --</option>
+          </select>
+          <p style="font-size: 0.9rem; color: #666;">按住Ctrl键可多选</p>
+        </div>
+        <div class="form-group">
+          <button id="runBtn">运行 BuffettMunger-Agent</button>
+          <button id="runPortfolioBtn">运行投资组合分析</button>
+        </div>
+
+        <div id="result" class="result hidden">
+          <div class="loading">正在运行智能体分析中...</div>
+          
+          <!-- 智能体可视化区域 -->
+          <div class="agent-visualization" style="margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 8px; background-color: #f9fafb;">
+            <h3>🤖 BuffettMunger-Agent 分析过程</h3>
+            <div id="agentThinking" style="font-family: monospace; white-space: pre-line; line-height: 1.5;"></div>
+          </div>
+          
+          <div class="report-container">
+            <div class="report"></div>
+            <div class="charts">
+              <div class="chart-container">
+                <canvas id="scoreChart"></canvas>
+              </div>
+              <div class="chart-container">
+                <canvas id="metricsChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="export-buttons" style="margin-top: 1rem; text-align: center;">
+            <button id="exportPDFBtn">导出 PDF</button>
+            <button id="exportExcelBtn">导出 Excel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 好公司推荐模块 -->
+    <div class="tab-content" id="recommendations-tab">
+      <div class="demo-box">
+        <h2>💎 好公司推荐</h2>
+        <p>基于安全边际和价值投资原则的公司推荐</p>
+        
+        <div class="form-group">
+          <label for="marketFilter">市场筛选：</label>
+          <select id="marketFilter">
+            <option value="">全部市场</option>
+            <option value="CN">沪深股市</option>
+            <option value="HK">港股</option>
+            <option value="US">美股</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="filterMethod">筛选方法：</label>
+          <select id="filterMethod">
+            <option value="magicFormula">神奇公式 (ROE/PE)</option>
+            <option value="pbRoe">PB-ROE策略</option>
+            <option value="traditional">传统价值投资</option>
+          </select>
+          <button id="refreshRecommendationsBtn">刷新推荐</button>
+        </div>
+        
+        <div id="recommendationsList" style="margin-top: 1rem;">
+          <table id="recommendationsTable" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #f3f4f6;">
+                <th style="padding: 0.5rem; text-align: left; border: 1px solid #ddd;">股票名称</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">股票代码</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">市场</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">行业</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">ROE(%)</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">PE</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">PB</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">PE排名</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">ROE排名</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">总排名</th>
+                <th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="recommendationsTableBody">
+              <!-- 推荐数据将通过JavaScript动态添加 -->
+            </tbody>
+          </table>
+          <div class="loading" id="recommendationsLoading" style="display: none; text-align: center; padding: 1rem;">正在加载推荐...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI智能体对话模块 -->
+    <div class="tab-content" id="ai-agent-tab">
+      <div class="demo-box">
+        <h2>🤖 AI智能体对话</h2>
+        <p>与价值投资AI智能体进行自然语言对话，获取专业投资分析</p>
+
+        <div class="form-group">
+          <label for="aiStockSelector">选择股票（可选）：</label>
+          <select id="aiStockSelector">
+            <option value="">-- 选择公司（可选）--</option>
+          </select>
+        </div>
+
+        <div style="margin: 1.5rem 0;">
+          <div id="chatHistory" style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; height: 400px; overflow-y: auto; background-color: #f9fafb; margin-bottom: 1rem;">
+            <div class="chat-message system">
+              <p>🤖 您好！我是价值投资AI智能体，基于巴菲特和芒格的投资哲学。请问有什么可以帮您分析的？</p>
+            </div>
+          </div>
+          <div style="display: flex;">
+            <input type="text" id="userInput" placeholder="输入您的问题，例如：分析贵州茅台的投资价值" style="flex: 1; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px 0 0 4px;">
+            <button id="sendMessageBtn" style="padding: 0.75rem 1.5rem; background-color: #3b82f6; color: white; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">发送</button>
+          </div>
+          <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">示例问题：
+            <a href="#" class="example-question">分析贵州茅台的安全边际</a> | 
+            <a href="#" class="example-question">五粮液的护城河分析</a> | 
+            <a href="#" class="example-question">银行股的投资机会</a>
+          </p>
+        </div>
+
+        <div id="aiAnalysisResult" class="hidden" style="margin-top: 1.5rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 8px; background-color: #f9fafb;">
+          <h3>📊 深度分析结果</h3>
+          <div id="analysisContent"></div>
+          <div id="reasoningChain" style="margin-top: 1rem; padding: 1rem; background-color: #f3f4f6; border-radius: 6px;">
+            <h4>🧠 推理过程</h4>
+            <div id="reasoningSteps"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIRE计算器模块 -->
+    <div class="tab-content" id="fire-tab">
+      <div class="demo-box">
+        <h2>🔥 FIRE计算器</h2>
+        <p>计算不同开始年龄和年化收益率下的定投收益，展示投资尽早开始的重要性</p>
+
+        <div class="form-group">
+          <label for="monthlyInvestment">每月定投金额（元）：</label>
+          <input type="number" id="monthlyInvestment" value="1000" min="100" max="10000" step="100" style="width: 150px;">
+        </div>
+
+        <div class="form-group">
+          <label for="investmentYears">投资年限（年）：</label>
+          <input type="number" id="investmentYears" value="30" min="10" max="50" step="5" style="width: 150px;">
+        </div>
+
+        <div class="form-group">
+          <label for="displayOption">显示选项：</label>
+          <select id="displayOption" style="width: 150px;">
+            <option value="finalAmount">最终资产（万元）</option>
+            <option value="multiple">收益倍数</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <button id="calculateFireBtn">计算收益</button>
+        </div>
+
+        <div id="fireResults" style="margin-top: 2rem;">
+          <h3>投资收益对比</h3>
+          <div style="overflow-x: auto;">
+            <table id="fireTable" style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
+              <thead id="fireTableHeader">
+              <tr style="background-color: #f3f4f6;">
+                <th style="padding: 0.75rem; text-align: left; border: 1px solid #ddd; position: sticky; left: 0; background-color: #f3f4f6;">开始年龄</th>
+                <th style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">年化收益率 4%</th>
+                <th style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">年化收益率 6%</th>
+                <th style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">年化收益率 8%</th>
+                <th style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">年化收益率 10%</th>
+                <th style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">年化收益率 12%</th>
+              </tr>
+              <tr style="background-color: #f9fafb;">
+                <th style="padding: 0.75rem; text-align: left; border: 1px solid #ddd; position: sticky; left: 0; background-color: #f9fafb;">年龄</th>
+                <th style="padding: 0.75rem; text-align: right; border: 1px solid #ddd;">最终资产（万元）</th>
+                <th style="padding: 0.75rem; text-align: right; border: 1px solid #ddd;">最终资产（万元）</th>
+                <th style="padding: 0.75rem; text-align: right; border: 1px solid #ddd;">最终资产（万元）</th>
+                <th style="padding: 0.75rem; text-align: right; border: 1px solid #ddd;">最终资产（万元）</th>
+                <th style="padding: 0.75rem; text-align: right; border: 1px solid #ddd;">最终资产（万元）</th>
+              </tr>
+            </thead>
+              <tbody id="fireTableBody">
+                <!-- 计算结果将通过JavaScript动态添加 -->
+              </tbody>
+            </table>
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <h3>收益对比图表</h3>
+            <div class="chart-container" style="position: relative; height: 400px; width: 100%;">
+              <canvas id="fireChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div id="fireInsight" style="margin-top: 2rem; padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 8px; background-color: #f9fafb;">
+          <h3>💡 投资洞察</h3>
+          <p id="insightText">点击"计算收益"按钮查看投资尽早开始的重要性分析</p>
         </div>
       </div>
     </div>
@@ -64,7 +364,306 @@
     </div>
   </div>
 
+  <!-- 标签页切换脚本 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          
+          // 切换按钮状态
+          tabBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          
+          // 切换内容
+          tabContents.forEach(content => {
+            content.classList.remove('active');
+          });
+          document.getElementById(tabId + '-tab').classList.add('active');
+        });
+      });
+    });
+  </script>
+
   <script src="data.js"></script>
   <script src="agent.js"></script>
+  
+  <!-- FIRE计算器功能 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // FIRE计算器功能
+      const monthlyInvestmentInput = document.getElementById('monthlyInvestment');
+      const investmentYearsInput = document.getElementById('investmentYears');
+      const calculateFireBtn = document.getElementById('calculateFireBtn');
+      const fireTableBody = document.getElementById('fireTableBody');
+      const insightText = document.getElementById('insightText');
+      let fireChart = null;
+      
+      // 计算定投收益的函数
+      function calculateInvestment(monthlyAmount, years, annualRate) {
+        const months = years * 12;
+        const monthlyRate = annualRate / 12;
+        let totalInvestment = 0;
+        let finalAmount = 0;
+        
+        for (let i = 0; i < months; i++) {
+          totalInvestment += monthlyAmount;
+          finalAmount = (finalAmount + monthlyAmount) * (1 + monthlyRate);
+        }
+        
+        const profit = finalAmount - totalInvestment;
+        const multiple = (finalAmount / totalInvestment).toFixed(2);
+        
+        return {
+          totalInvestment: totalInvestment.toFixed(2),
+          finalAmount: finalAmount.toFixed(2),
+          profit: profit.toFixed(2),
+          multiple: multiple
+        };
+      }
+      
+      // 渲染结果表格
+      function renderFireTable(monthlyAmount, years) {
+        fireTableBody.innerHTML = '';
+        
+        // 不同开始年龄（9个）
+        const startAges = [20, 22, 24, 26, 28, 30, 32, 34, 36];
+        // 不同年化收益率（5个）
+        const annualRates = [0.04, 0.06, 0.08, 0.10, 0.12];
+        // 最终年龄（默认60岁）
+        const finalAge = 60;
+        // 获取用户选择的显示选项
+        const displayOption = document.getElementById('displayOption').value;
+        
+        const results = [];
+        
+        // 按年龄分组计算结果
+        for (const age of startAges) {
+          // 计算投资年限（最终年龄 - 开始年龄）
+          const actualYears = finalAge - age;
+          // 确保投资年限为正数
+          if (actualYears <= 0) continue;
+          
+          const row = document.createElement('tr');
+          let rowHtml = `<td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold; position: sticky; left: 0; background-color: white;">${age}岁 (${actualYears}年)</td>`;
+          
+          for (const rate of annualRates) {
+            const result = calculateInvestment(monthlyAmount, actualYears, rate);
+            // 将最终资产转换为万元
+            const finalAmountInWan = (parseFloat(result.finalAmount) / 10000).toFixed(2);
+            results.push({
+              age: age,
+              years: actualYears,
+              rate: (rate * 100).toFixed(0),
+              totalInvestment: result.totalInvestment,
+              finalAmount: finalAmountInWan,
+              profit: result.profit,
+              multiple: result.multiple
+            });
+            
+            // 根据收益倍数获取底色
+            let backgroundColor = 'white';
+            const multiple = parseFloat(result.multiple);
+            if (multiple >= 10) {
+              backgroundColor = '#d1fae5'; // 浅绿色
+            } else if (multiple >= 7) {
+              backgroundColor = '#dbeafe'; // 浅蓝色
+            } else if (multiple >= 5) {
+              backgroundColor = '#fef3c7'; // 浅黄色
+            } else if (multiple >= 3) {
+              backgroundColor = '#fce7f3'; // 浅粉色
+            }
+            
+            // 根据显示选项添加相应的单元格
+            if (displayOption === 'finalAmount') {
+              rowHtml += `
+                <td style="padding: 0.75rem; text-align: right; border: 1px solid #ddd; font-weight: ${multiple > 5 ? 'bold' : 'normal'}; background-color: ${backgroundColor};">${finalAmountInWan}</td>
+              `;
+            } else {
+              rowHtml += `
+                <td style="padding: 0.75rem; text-align: right; border: 1px solid #ddd; font-weight: ${multiple > 5 ? 'bold' : 'normal'}; background-color: ${backgroundColor};">${result.multiple}x</td>
+              `;
+            }
+          }
+          
+          row.innerHTML = rowHtml;
+          fireTableBody.appendChild(row);
+        }
+        
+        return results;
+      }
+      
+      // 渲染收益对比图表
+      function renderFireChart(results) {
+        const ctx = document.getElementById('fireChart').getContext('2d');
+        
+        // 销毁旧图表
+        if (fireChart) {
+          fireChart.destroy();
+        }
+        
+        // 获取用户选择的显示选项
+        const displayOption = document.getElementById('displayOption').value;
+        
+        // 按年龄分组数据
+        const ages = [20, 30, 36];
+        const rates = ['4%', '8%', '12%'];
+        
+        const datasets = [];
+        
+        // 为每个年龄创建一个数据集
+        const colors = ['rgba(75, 192, 192, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)'];
+        const borderColors = ['rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'];
+        
+        ages.forEach((age, index) => {
+          const ageResults = results.filter(r => parseInt(r.age) === age);
+          let chartData;
+          
+          if (displayOption === 'finalAmount') {
+            chartData = ageResults.map(r => parseFloat(r.finalAmount));
+          } else {
+            chartData = ageResults.map(r => parseFloat(r.multiple));
+          }
+          
+          datasets.push({
+            label: `${age}岁开始投资`,
+            data: chartData,
+            backgroundColor: colors[index],
+            borderColor: borderColors[index],
+            borderWidth: 2,
+            tension: 0.1
+          });
+        });
+        
+        // 设置图表标题和Y轴标签
+        let yAxisLabel = '最终资产（万元）';
+        let chartTitle = '不同开始年龄和年化收益率的投资收益对比';
+        
+        if (displayOption === 'multiple') {
+          yAxisLabel = '收益倍数';
+          chartTitle = '不同开始年龄和年化收益率的收益倍数对比';
+        }
+        
+        fireChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: rates,
+            datasets: datasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: yAxisLabel
+                }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: '年化收益率'
+                }
+              }
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: chartTitle,
+                font: {
+                  size: 16
+                }
+              },
+              legend: {
+                position: 'top'
+              }
+            }
+          }
+        });
+      }
+      
+      // 生成投资洞察
+      function generateInsight(results, monthlyAmount, years) {
+        // 找到最大和最小的收益
+        const maxResult = results.reduce((max, current) => 
+          parseFloat(current.finalAmount) > parseFloat(max.finalAmount) ? current : max
+        );
+        
+        const minResult = results.reduce((min, current) => 
+          parseFloat(current.finalAmount) < parseFloat(min.finalAmount) ? current : min
+        );
+        
+        const difference = (parseFloat(maxResult.finalAmount) - parseFloat(minResult.finalAmount)).toFixed(2);
+        const differencePercent = ((difference / parseFloat(minResult.finalAmount)) * 100).toFixed(0);
+        
+        let insight = `
+          <strong>投资尽早开始的重要性：</strong><br><br>
+          • 从${maxResult.age}岁开始投资（${maxResult.years}年），年化收益率${maxResult.rate}%，最终资产可达${maxResult.finalAmount}万元<br>
+          • 从${minResult.age}岁开始投资（${minResult.years}年），年化收益率${minResult.rate}%，最终资产仅为${minResult.finalAmount}万元<br>
+          • 差距高达${difference}万元，相当于${differencePercent}%<br><br>
+          <strong>关键洞察：</strong><br>
+          1. <strong>时间的力量</strong>：早5年开始投资，即使年化收益率相同，最终收益也会有显著差异<br>
+          2. <strong>复利的魔力</strong>：年化收益率从4%提升到12%，最终收益可能相差数倍<br>
+          3. <strong>坚持的重要性</strong>：每月定投${monthlyAmount}元，长期坚持会积累可观的财富<br><br>
+          结论：投资尽早开始，选择合适的投资策略，长期坚持，是实现财务自由的关键。
+        `;
+        
+        insightText.innerHTML = insight;
+      }
+      
+      // 更新表格头部
+      function updateTableHeader() {
+        const displayOption = document.getElementById('displayOption').value;
+        const headerRows = document.querySelectorAll('#fireTableHeader tr');
+        const dataRow = headerRows[1];
+        const dataCells = dataRow.querySelectorAll('th');
+        
+        // 更新数据行的标题
+        const headerText = displayOption === 'finalAmount' ? '最终资产（万元）' : '收益倍数';
+        
+        for (let i = 1; i < dataCells.length; i++) {
+          dataCells[i].textContent = headerText;
+        }
+      }
+      
+      // 计算按钮点击事件
+      calculateFireBtn.addEventListener('click', function() {
+        const monthlyAmount = parseFloat(monthlyInvestmentInput.value);
+        const years = parseInt(investmentYearsInput.value);
+        
+        // 更新表格头部
+        updateTableHeader();
+        
+        // 渲染表格
+        const results = renderFireTable(monthlyAmount, years);
+        
+        // 渲染图表
+        renderFireChart(results);
+        
+        // 生成投资洞察
+        generateInsight(results, monthlyAmount, years);
+      });
+      
+      // 显示选项切换事件
+      document.getElementById('displayOption').addEventListener('change', function() {
+        const monthlyAmount = parseFloat(monthlyInvestmentInput.value);
+        const years = parseInt(investmentYearsInput.value);
+        
+        // 更新表格头部
+        updateTableHeader();
+        
+        // 重新渲染表格
+        const results = renderFireTable(monthlyAmount, years);
+        
+        // 重新渲染图表
+        renderFireChart(results);
+      });
+    });
+  </script>
 </body>
 </html>

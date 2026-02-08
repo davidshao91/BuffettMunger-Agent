@@ -1,7 +1,8 @@
 const stockData = {
   "600519.SH": {
     code: "600519.SH",
-    name: "优质价值公司",
+    name: "贵州茅台",
+    industry: "白酒",
     pe: 15.2,
     pb: 3.1,
     peg: 0.8,
@@ -17,6 +18,7 @@ const stockData = {
   "000858.SZ": {
     code: "000858.SZ",
     name: "五粮液",
+    industry: "白酒",
     pe: 18.1,
     pb: 3.8,
     peg: 0.9,
@@ -31,7 +33,8 @@ const stockData = {
   },
   "600000.SH": {
     code: "600000.SH",
-    name: "高风险高估公司",
+    name: "浦发银行",
+    industry: "银行",
     pe: 48,
     pb: 5.5,
     peg: 1.9,
@@ -43,5 +46,202 @@ const stockData = {
     profit_growth: -3,
     gross_margin: 20,
     cash_flow_healthy: false
+  },
+  "601318.SH": {
+    code: "601318.SH",
+    name: "中国平安",
+    industry: "金融",
+    pe: 8.5,
+    pb: 1.2,
+    peg: 0.7,
+    pe_hist_percent: 30,
+    pb_hist_percent: 25,
+    roe_ttm: 14.5,
+    debt_to_asset: 85,
+    revenue_growth: 5,
+    profit_growth: 3,
+    gross_margin: 45,
+    cash_flow_healthy: true
+  },
+  "600276.SH": {
+    code: "600276.SH",
+    name: "恒瑞医药",
+    industry: "医药",
+    pe: 25.0,
+    pb: 3.5,
+    peg: 1.1,
+    pe_hist_percent: 40,
+    pb_hist_percent: 35,
+    roe_ttm: 16.0,
+    debt_to_asset: 15,
+    revenue_growth: 12,
+    profit_growth: 8,
+    gross_margin: 85,
+    cash_flow_healthy: true
+  },
+  "000333.SZ": {
+    code: "000333.SZ",
+    name: "美的集团",
+    industry: "家电",
+    pe: 12.5,
+    pb: 2.0,
+    peg: 0.9,
+    pe_hist_percent: 35,
+    pb_hist_percent: 30,
+    roe_ttm: 18.5,
+    debt_to_asset: 50,
+    revenue_growth: 8,
+    profit_growth: 6,
+    gross_margin: 30,
+    cash_flow_healthy: true
+  },
+  "000895.SZ": {
+    code: "000895.SZ",
+    name: "双汇发展",
+    industry: "食品",
+    pe: 10.0,
+    pb: 1.5,
+    peg: 0.8,
+    pe_hist_percent: 25,
+    pb_hist_percent: 20,
+    roe_ttm: 15.0,
+    debt_to_asset: 20,
+    revenue_growth: 5,
+    profit_growth: 4,
+    gross_margin: 25,
+    cash_flow_healthy: true
+  },
+  "601888.SH": {
+    code: "601888.SH",
+    name: "中国中免",
+    industry: "零售",
+    pe: 20.0,
+    pb: 4.0,
+    peg: 1.0,
+    pe_hist_percent: 35,
+    pb_hist_percent: 30,
+    roe_ttm: 19.0,
+    debt_to_asset: 30,
+    revenue_growth: 15,
+    profit_growth: 12,
+    gross_margin: 45,
+    cash_flow_healthy: true
+  },
+  "600588.SH": {
+    code: "600588.SH",
+    name: "用友网络",
+    industry: "科技",
+    pe: 35.0,
+    pb: 4.5,
+    peg: 1.2,
+    pe_hist_percent: 45,
+    pb_hist_percent: 40,
+    roe_ttm: 14.0,
+    debt_to_asset: 35,
+    revenue_growth: 20,
+    profit_growth: 15,
+    gross_margin: 65,
+    cash_flow_healthy: true
+  },
+  "300750.SZ": {
+    code: "300750.SZ",
+    name: "宁德时代",
+    industry: "新能源",
+    pe: 40.0,
+    pb: 6.0,
+    peg: 1.3,
+    pe_hist_percent: 50,
+    pb_hist_percent: 45,
+    roe_ttm: 18.0,
+    debt_to_asset: 40,
+    revenue_growth: 30,
+    profit_growth: 25,
+    gross_margin: 35,
+    cash_flow_healthy: true
+  }
+};
+
+// 行业平均数据
+const industryData = {
+  "白酒": {
+    pe: 25.0,
+    pb: 4.5,
+    roe_ttm: 18.0,
+    debt_to_asset: 30.0,
+    revenue_growth: 8.0,
+    profit_growth: 6.0,
+    gross_margin: 60.0
+  },
+  "银行": {
+    pe: 6.0,
+    pb: 0.8,
+    roe_ttm: 10.0,
+    debt_to_asset: 90.0,
+    revenue_growth: 5.0,
+    profit_growth: 4.0,
+    gross_margin: 30.0
+  },
+  "医药": {
+    pe: 30.0,
+    pb: 4.0,
+    roe_ttm: 12.0,
+    debt_to_asset: 45.0,
+    revenue_growth: 10.0,
+    profit_growth: 8.0,
+    gross_margin: 50.0
+  },
+  "科技": {
+    pe: 40.0,
+    pb: 5.0,
+    roe_ttm: 14.0,
+    debt_to_asset: 40.0,
+    revenue_growth: 15.0,
+    profit_growth: 12.0,
+    gross_margin: 40.0
+  },
+  "金融": {
+    pe: 10.0,
+    pb: 1.5,
+    roe_ttm: 12.0,
+    debt_to_asset: 85.0,
+    revenue_growth: 4.0,
+    profit_growth: 3.0,
+    gross_margin: 40.0
+  },
+  "家电": {
+    pe: 15.0,
+    pb: 2.5,
+    roe_ttm: 16.0,
+    debt_to_asset: 55.0,
+    revenue_growth: 6.0,
+    profit_growth: 5.0,
+    gross_margin: 35.0
+  },
+  "食品": {
+    pe: 18.0,
+    pb: 3.0,
+    roe_ttm: 14.0,
+    debt_to_asset: 25.0,
+    revenue_growth: 5.0,
+    profit_growth: 4.0,
+    gross_margin: 30.0
+  },
+  "零售": {
+    pe: 20.0,
+    pb: 3.5,
+    roe_ttm: 15.0,
+    debt_to_asset: 40.0,
+    revenue_growth: 8.0,
+    profit_growth: 6.0,
+    gross_margin: 40.0
+  },
+  "新能源": {
+    pe: 45.0,
+    pb: 6.5,
+    roe_ttm: 16.0,
+    debt_to_asset: 45.0,
+    revenue_growth: 25.0,
+    profit_growth: 20.0,
+    gross_margin: 35.0
   }
 };

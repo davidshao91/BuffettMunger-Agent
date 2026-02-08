@@ -1,4 +1,4 @@
-from src.buffett_agent import skills
+from src.buffet_agent import skills
 
 def test_safety_margin():
     data = {

@@ -5,27 +5,74 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
 }
 body {
-  background: #fafafa;
-  color: #222;
+  background: #f8fafc;
+  color: #1e293b;
   line-height: 1.6;
 }
 .container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
+
+/* 标签页样式 */
+.tab-navigation {
+  display: flex;
+  gap: 0.5rem;
+  margin: 2rem 0;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0;
+}
+
+.tab-btn:hover {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+.tab-btn.active {
+  background-color: #ffffff;
+  color: #2563eb;
+  border-bottom: 2px solid #2563eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
 header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 h1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin-bottom: 0.5rem;
-  color: #111;
+  color: white;
 }
 .sub {
-  color: #555;
-  font-size: 1rem;
+  color: rgba(255,255,255,0.9);
+  font-size: 1.1rem;
   margin-bottom: 1rem;
 }
 .star-btn {
@@ -37,6 +84,11 @@ h1 {
   text-decoration: none;
   font-weight: bold;
   margin-top: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.star-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 .demo-box {
   background: white;
@@ -44,30 +96,91 @@ h1 {
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.06);
   text-align: center;
+  margin-bottom: 2rem;
+  transition: box-shadow 0.3s;
+}
+.demo-box:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 .demo-box h2 {
   margin-bottom: 0.5rem;
+  color: #1e293b;
+  font-size: 1.5rem;
+}
+.demo-box h3 {
+  margin: 1.5rem 0 1rem;
+  color: #334155;
+  font-size: 1.2rem;
+}
+.demo-box h4 {
+  margin: 1rem 0 0.5rem;
+  color: #475569;
+  font-size: 1rem;
 }
 .demo-box p {
-  color: #555;
+  color: #64748b;
   margin-bottom: 1.2rem;
 }
-select, button {
-  padding: 0.7rem 1rem;
+.form-group {
+  margin: 1.5rem 0;
+}
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
   font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #ddd;
+  color: #334155;
+}
+.checkbox-label input {
+  margin-right: 0.5rem;
+}
+select, button {
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
   margin: 0.3rem;
+  transition: all 0.2s;
+}
+select {
+  background: white;
+  cursor: pointer;
+}
+select:hover {
+  border-color: #94a3b8;
 }
 button {
   background: #2563eb;
   color: white;
   border: none;
   cursor: pointer;
+  font-weight: 500;
+}
+button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+button:active {
+  transform: translateY(0);
 }
 button:disabled {
   background: #93c5fd;
   cursor: not-allowed;
+  transform: none;
+}
+button.deleteHoldingBtn, button.addToHoldingsBtn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  background: #ef4444;
+}
+button.addToHoldingsBtn {
+  background: #10b981;
+}
+button.addToHoldingsBtn:hover {
+  background: #059669;
+}
+button.deleteHoldingBtn:hover {
+  background: #dc2626;
 }
 .result {
   margin-top: 1.5rem;
@@ -80,21 +193,224 @@ button:disabled {
   color: #2563eb;
   padding: 1rem;
   text-align: center;
+  font-weight: 500;
+}
+.report-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .report-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .report {
+    flex: 1;
+  }
+  .charts {
+    flex: 1;
+  }
 }
 .report {
-  background: #f9fafb;
-  padding: 1.2rem;
+  background: #f8fafc;
+  padding: 1.5rem;
   border-radius: 8px;
   white-space: pre-wrap;
   line-height: 1.6;
+  min-height: 300px;
+  border: 1px solid #e2e8f0;
+}
+.charts {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.chart-container {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  height: 350px;
+  border: 1px solid #e2e8f0;
 }
 .info {
   text-align: center;
-  margin-top: 2rem;
-  color: #666;
+  margin-top: 3rem;
+  color: #64748b;
   font-size: 0.9rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
 .info a {
   color: #2563eb;
   text-decoration: none;
+  font-weight: 500;
+}
+.info a:hover {
+  text-decoration: underline;
+  color: #1d4ed8;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  header {
+    padding: 1.5rem 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .demo-box {
+    padding: 1.5rem;
+  }
+  
+  .chart-container {
+    height: 300px;
+  }
+  
+  select, button {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+  
+  table {
+    font-size: 0.9rem;
+  }
+  
+  th, td {
+    padding: 0.4rem !important;
+  }
+}
+
+/* 表格样式优化 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table th {
+  background: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.8rem;
+}
+
+table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+table tr:hover {
+  background: #f8fafc;
+}
+
+/* 热力图样式 */
+#holdingsHeatmap {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+#holdingsHeatmap h4 {
+  margin-bottom: 1rem;
+  color: #334155;
+}
+
+/* 智能体可视化样式 */
+.agent-visualization {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+}
+
+.agent-visualization h3 {
+  font-size: 1.2rem;
+  color: #334155;
+  margin-bottom: 1rem;
+}
+
+#agentThinking {
+  font-family: monospace;
+  white-space: pre-line;
+  line-height: 1.5;
+  background-color: white;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  min-height: 200px;
+  color: #334155;
+  overflow-y: auto;
+}
+
+
+
+/* 导出按钮样式 */
+.export-buttons {
+  margin-top: 1.5rem;
+  text-align: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+/* 好公司推荐样式 */
+#recommendationsList {
+  margin-top: 1.5rem;
+}
+
+#recommendationsLoading {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+}
+
+/* 持仓列表样式 */
+#holdingsList {
+  margin-top: 1.5rem;
+}
+
+#noHoldingsMsg {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
